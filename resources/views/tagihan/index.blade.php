@@ -4,19 +4,103 @@
 
 @section('content')
 <div class="row mb-3">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <h2><i class="bi bi-receipt"></i> Data Tagihan</h2>
     </div>
-    <div class="col-md-4 text-end">
+    <div class="col-md-6 text-end d-flex gap-2 justify-content-end flex-wrap">
+        <a href="{{ route('tagihan.bulkUpdateStatus') }}" class="btn btn-warning">
+            <i class="bi bi-arrow-repeat"></i> Update Status Massal
+        </a>
+        <a href="{{ route('tagihan.bulkCreate') }}" class="btn btn-info">
+            <i class="bi bi-files"></i> Buat Massal
+        </a>
         <a href="{{ route('tagihan.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Buat Tagihan
         </a>
     </div>
 </div>
 
+<!-- Filter Section -->
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h6 class="mb-0"><i class="bi bi-funnel"></i> Filter Data Tagihan</h6>
+    </div>
+    <div class="card-body">
+        <form action="{{ route('tagihan.index') }}" method="GET" class="row g-3">
+            <!-- Filter NIS -->
+            <div class="col-md-3">
+                <label for="nis" class="form-label">NIS</label>
+                <input type="text" class="form-control" id="nis" name="nis" 
+                       value="{{ request('nis') }}" placeholder="Cari NIS...">
+            </div>
+
+            <!-- Filter Nama Siswa -->
+            <div class="col-md-3">
+                <label for="nama" class="form-label">Nama Siswa</label>
+                <input type="text" class="form-control" id="nama" name="nama" 
+                       value="{{ request('nama') }}" placeholder="Cari nama siswa...">
+            </div>
+
+            <!-- Filter Kelas -->
+            <div class="col-md-3">
+                <label for="kelas" class="form-label">Kelas</label>
+                <select class="form-select" id="kelas" name="kelas">
+                    <option value="">-- Semua Kelas --</option>
+                    @foreach($kelas as $k)
+                        <option value="{{ $k->id_kelas }}" {{ request('kelas') == $k->id_kelas ? 'selected' : '' }}>
+                            {{ $k->nama_kelas }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Filter Periode -->
+            <div class="col-md-3">
+                <label for="periode" class="form-label">Periode</label>
+                <select class="form-select" id="periode" name="periode">
+                    <option value="">-- Semua Periode --</option>
+                    @foreach($periode as $p)
+                        <option value="{{ $p }}" {{ request('periode') == $p ? 'selected' : '' }}>
+                            {{ $p }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Filter Status -->
+            <div class="col-md-2">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="">-- Semua --</option>
+                    @foreach($statuses as $key => $label)
+                        <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Cari
+                </button>
+                <a href="{{ route('tagihan.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 @if ($tagihan->isEmpty())
     <div class="alert alert-info">
-        <i class="bi bi-info-circle"></i> Tidak ada data tagihan
+        <i class="bi bi-info-circle"></i> 
+        @if(request()->hasAny(['nis', 'nama', 'kelas', 'periode', 'status']))
+            Tidak ada data tagihan yang sesuai dengan filter Anda
+        @else
+            Tidak ada data tagihan
+        @endif
     </div>
 @else
     <div class="card">
@@ -25,7 +109,9 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
+                        <th>NIS</th>
                         <th>Siswa</th>
+                        <th>Kelas</th>
                         <th>Periode</th>
                         <th>Jumlah</th>
                         <th>Status</th>
@@ -36,7 +122,27 @@
                     @foreach ($tagihan as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->siswa->nama_siswa ?? '-' }}</td>
+                        <td>
+                            @if($item->siswa)
+                                {{ $item->siswa->nomor_induk_siswa }}
+                            @else
+                                <span style="color: red;">NULL SISWA (NIS: {{ $item->nomor_induk_siswa }})</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($item->siswa)
+                                {{ $item->siswa->nama_siswa }}
+                            @else
+                                <span style="color: red;">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($item->siswa && $item->siswa->kelas)
+                                {{ $item->siswa->kelas->nama_kelas }}
+                            @else
+                                <span style="color: red;">-</span>
+                            @endif
+                        </td>
                         <td>{{ $item->periode }}</td>
                         <td>Rp {{ number_format($item->jumlah_tagihan, 0, ',', '.') }}</td>
                         <td>

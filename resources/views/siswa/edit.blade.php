@@ -32,12 +32,13 @@
 
             <div class="mb-3">
                 <label for="nomor_induk_siswa" class="form-label">Nomor Induk Siswa (NIS) <span class="text-danger">*</span></label>
-                <input type="number" class="form-control @error('nomor_induk_siswa') is-invalid @enderror" 
-                       id="nomor_induk_siswa" name="nomor_induk_siswa" value="{{ old('nomor_induk_siswa', $siswa->nomor_induk_siswa) }}" required>
+                <input type="text" class="form-control @error('nomor_induk_siswa') is-invalid @enderror" 
+                       id="nomor_induk_siswa" name="nomor_induk_siswa" value="{{ old('nomor_induk_siswa', $siswa->nomor_induk_siswa) }}" 
+                       pattern="[0-9]*" maxlength="20" required style="font-size: 1.1em; letter-spacing: 0.05em;">
                 @error('nomor_induk_siswa')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <small class="form-text text-muted">Nomor induk siswa yang unik (tidak boleh sama dengan siswa lain)</small>
+                <small class="form-text text-muted">Nomor induk siswa yang unik (tidak boleh sama dengan siswa lain). Contoh: 0064424163</small>
             </div>
 
             <div class="mb-3">

@@ -35,7 +35,7 @@
                 
                 <!-- Preview Media -->
                 <div id="media-preview" class="mt-3" style="display: none;">
-                    <img id="preview-img" src="" alt="Preview" class="rounded" style="max-width: 100%; max-height: 300px; object-fit: cover;">
+                    <img id="preview-img" src="" alt="Preview" class="rounded" style="max-width: 100%; max-height: 400px; object-fit: contain; display: block; margin: 0 auto;">
                     <button type="button" class="btn btn-sm btn-danger mt-2" onclick="removeMedia()">
                         <i class="bi bi-trash"></i> Hapus Foto
                     </button>
@@ -46,14 +46,8 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="waktu_unggah" class="form-label">Waktu Unggah <span class="text-danger">*</span></label>
-                <input type="datetime-local" class="form-control @error('waktu_unggah') is-invalid @enderror" 
-                       id="waktu_unggah" name="waktu_unggah" value="{{ old('waktu_unggah', now()->format('Y-m-d\TH:i')) }}" required>
-                @error('waktu_unggah')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+            <!-- Hidden field untuk waktu_unggah - auto-populated dengan current time -->
+            <input type="hidden" id="waktu_unggah" name="waktu_unggah" value="">
 
             <div class="mb-3">
                 <label for="deskripsi" class="form-label">Deskripsi <span class="text-danger">*</span></label>
@@ -112,6 +106,19 @@
 </style>
 
 <script>
+// Set current datetime on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const date = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    const currentDateTime = `${year}-${month}-${date}T${hours}:${minutes}`;
+    document.getElementById('waktu_unggah').value = currentDateTime;
+});
+
 function previewMedia(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();

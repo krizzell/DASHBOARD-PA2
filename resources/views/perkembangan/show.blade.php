@@ -48,11 +48,38 @@
     </div>
 </div>
 
-<!-- Kategori -->
+<!-- Kategori dengan Nilai -->
 <div class="card mb-4">
+    <div class="card-header bg-light">
+        <h6 class="mb-0">Kategori Perkembangan</h6>
+    </div>
     <div class="card-body">
-        <h6 class="text-muted mb-2">Kategori Perkembangan</h6>
-        <h4>{{ $perkembangan->kategori }}</h4>
+        @php $perkembangan->load('kategoriDetails'); @endphp
+        @if ($perkembangan->kategoriDetails && count($perkembangan->kategoriDetails) > 0)
+            <div class="row">
+                @foreach ($perkembangan->kategoriDetails as $detail)
+                    <div class="col-md-12 mb-3">
+                        <div class="card border-light">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <h6 class="mb-0">{{ $detail->nama_kategori }}</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="badge bg-primary">Nilai: {{ $detail->nilai }}/10</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="text-muted d-block">{{ $detail->deskripsi }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <p class="text-muted">-</p>
+        @endif
     </div>
 </div>
 
@@ -77,15 +104,37 @@
     </div>
 </div>
 
-<!-- Deskripsi Perkembangan -->
+<!-- Template Deskripsi Indikator -->
 <div class="card mb-4">
     <div class="card-header bg-light">
-        <h6 class="mb-0">Deskripsi Perkembangan</h6>
+        <h6 class="mb-0">Deskripsi Template Indikator</h6>
     </div>
     <div class="card-body">
-        <p>{{ $perkembangan->deskripsi }}</p>
+        @php
+            $templateDescriptions = [
+                'BB' => 'Anak belum menunjukkan kemampuan dalam aspek ini. Perlu dukungan dan bimbingan intensif dari guru untuk mengembangkan kompetensi ini.',
+                'MB' => 'Anak mulai menunjukkan kemampuan dalam aspek ini namun masih memerlukan bimbingan. Perlu terus didukung untuk mencapai perkembangan yang lebih baik.',
+                'BSH' => 'Anak menunjukkan kemampuan yang sesuai dengan harapan untuk usia/tingkatannya. Anak mampu melaksanakan tugas dengan cukup baik.',
+                'BSB' => 'Anak menunjukkan kemampuan yang sangat menonjol dalam aspek ini. Anak mampu melaksanakan tugas dengan sangat baik dan melampaui harapan.'
+            ];
+        @endphp
+        <p class="mb-0" style="line-height: 1.6;">
+            {{ $templateDescriptions[$perkembangan->status_utama] ?? '-' }}
+        </p>
     </div>
 </div>
+
+<!-- Catatan Tambahan -->
+@if ($perkembangan->deskripsi)
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h6 class="mb-0">Catatan Tambahan</h6>
+    </div>
+    <div class="card-body">
+        <p class="mb-0" style="line-height: 1.6;">{{ $perkembangan->deskripsi }}</p>
+    </div>
+</div>
+@endif
 
 <!-- Info Tanggal -->
 <div class="card mb-4 bg-light">

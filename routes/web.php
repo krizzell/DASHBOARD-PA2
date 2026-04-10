@@ -59,6 +59,10 @@ Route::middleware('check.guru')->group(function () {
     Route::resource('perkembangan', PerkembanganController::class);
     
     // Routes untuk Tagihan
+    Route::get('/tagihan/bulk-create', [TagihanController::class, 'bulkCreate'])->name('tagihan.bulkCreate');
+    Route::post('/tagihan/bulk-store', [TagihanController::class, 'bulkCreateStore'])->name('tagihan.bulkCreateStore');
+    Route::get('/tagihan/bulk-update-status', [TagihanController::class, 'bulkUpdateStatus'])->name('tagihan.bulkUpdateStatus');
+    Route::post('/tagihan/bulk-update-status', [TagihanController::class, 'bulkUpdateStatusStore'])->name('tagihan.bulkUpdateStatusStore');
     Route::resource('tagihan', TagihanController::class);
     
     // Routes untuk Pembayaran

@@ -16,7 +16,7 @@
             <div class="mb-4">
                 <div class="media-display rounded overflow-hidden" style="background-color: #f8f9fa;">
                     <img src="{{ asset('storage/' . $pengumuman->media) }}" alt="Foto Pengumuman" 
-                         class="img-fluid w-100" style="max-height: 400px; object-fit: cover;">
+                         class="img-fluid" style="max-height: 500px; object-fit: contain; display: block; margin: 0 auto;">
                 </div>
             </div>
         @endif

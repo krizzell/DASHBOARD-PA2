@@ -65,7 +65,6 @@ class AkunController extends Controller
         $validated = $request->validate([
             'id_guru' => $role === 'guru' ? 'required|exists:guru,id_guru' : 'nullable|exists:guru,id_guru',
             'nomor_induk_siswa' => $role === 'orangtua' ? 'required|exists:siswa,nomor_induk_siswa' : 'nullable|exists:siswa,nomor_induk_siswa',
-            'password' => 'required|string|min:8',
             'role' => 'required|in:guru,orangtua',
             'is_super_admin' => 'nullable|boolean',
         ], [
@@ -73,7 +72,8 @@ class AkunController extends Controller
             'nomor_induk_siswa.required' => 'Siswa wajib dipilih untuk akun dengan role orangtua',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        // Set default password to 'password123'
+        $validated['password'] = Hash::make('password123');
         $validated['is_super_admin'] = isset($validated['is_super_admin']) ? 1 : 0;
         $validated['username'] = $username;
         

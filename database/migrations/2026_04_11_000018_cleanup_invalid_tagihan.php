@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,8 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migration already handled in 000005_create_siswa_table.php
-        // nomor_induk_siswa is now a string field with unique constraint
+        // Delete semua tagihan yang nomor_induk_siswa-nya NULL atau tidak valid
+        DB::statement('DELETE FROM tagihan WHERE nomor_induk_siswa IS NULL');
+        DB::statement('DELETE FROM tagihan WHERE nomor_induk_siswa NOT IN (SELECT nomor_induk_siswa FROM siswa)');
     }
 
     /**
@@ -21,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // No changes to reverse
+        // No reverse action
     }
 };

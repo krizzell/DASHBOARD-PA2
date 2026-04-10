@@ -8,10 +8,34 @@ use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $siswa = Siswa::with('kelas')->get();
-        return view('siswa.index', compact('siswa'));
+        $query = Siswa::with('kelas');
+
+        // Filter berdasarkan NIS
+        if ($request->filled('nis')) {
+            $query->where('nomor_induk_siswa', 'like', '%' . $request->nis . '%');
+        }
+
+        // Filter berdasarkan Nama Siswa
+        if ($request->filled('nama')) {
+            $query->where('nama_siswa', 'like', '%' . $request->nama . '%');
+        }
+
+        // Filter berdasarkan Kelas
+        if ($request->filled('kelas')) {
+            $query->where('id_kelas', $request->kelas);
+        }
+
+        // Filter berdasarkan Jenis Kelamin
+        if ($request->filled('jenis_kelamin')) {
+            $query->where('jenis_kelamin', $request->jenis_kelamin);
+        }
+
+        $siswa = $query->get();
+        $kelas = Kelas::all();
+
+        return view('siswa.index', compact('siswa', 'kelas'));
     }
 
     public function create()

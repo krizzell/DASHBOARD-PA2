@@ -81,7 +81,7 @@ class AkunSeeder extends Seeder
         }
 
         // Create test siswa for each guru
-        $siswaCounter = 1001;
+        $siswaCounter = 1;
         $orangtuaCounter = 1;
         
         $guruList = Guru::all();
@@ -105,15 +105,18 @@ class AkunSeeder extends Seeder
             for ($i = 0; $i < 2; $i++) {
                 $data = $siswaData[($guru->id_guru - 1) * 2 + $i];
                 
+                // Format NIS dengan leading zeros (001, 002, 003, etc)
+                $formattedNIS = str_pad($siswaCounter, 6, '0', STR_PAD_LEFT);
+                
                 $siswa = Siswa::firstOrCreate([
-                    'nomor_induk_siswa' => $siswaCounter,
+                    'nomor_induk_siswa' => $formattedNIS,
                 ], [
                     'id_kelas' => $kelas->id_kelas,
                     'nama_siswa' => $data[0],
                     'nama_orgtua' => $data[1],
                     'tgl_lahir' => $data[2],
                     'jenis_kelamin' => $data[3],
-                    'alamat' => 'Jl. Siswa No. ' . $siswaCounter,
+                    'alamat' => 'Jl. Siswa No. ' . $formattedNIS,
                 ]);
 
                 // Create orangtua account for each student

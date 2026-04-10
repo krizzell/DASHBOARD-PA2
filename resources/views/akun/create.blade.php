@@ -73,12 +73,9 @@
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                       id="password" name="password" required>
-                @error('password')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <div class="alert alert-warning">
+                    <i class="bi bi-key"></i> <strong>Password Default:</strong> Password akun baru akan otomatis di-generate dengan password <code>password123</code>. User dapat mengubah password setelah login.
+                </div>
             </div>
 
             <div class="d-flex gap-2">
