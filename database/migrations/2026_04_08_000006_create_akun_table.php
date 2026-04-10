@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('akun', function (Blueprint $table) {
             $table->id('id_akun');
             $table->unsignedBigInteger('id_guru')->nullable();
-            $table->unsignedBigInteger('nomor_induk_siswa')->nullable();
+            $table->string('nomor_induk_siswa', 20)->nullable();
             $table->string('username', 50);
             $table->string('password', 100);
             $table->enum('role', ['guru', 'orangtua']);

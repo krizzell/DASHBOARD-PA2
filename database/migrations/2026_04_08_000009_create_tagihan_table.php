@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tagihan', function (Blueprint $table) {
             $table->id('id_tagihan');
-            $table->unsignedBigInteger('nomor_induk_siswa');
+            $table->string('nomor_induk_siswa', 20);
             $table->decimal('jumlah_tagihan', 10, 2);
             $table->string('periode', 20);
             $table->enum('status', ['belum_bayar', 'lunas']);

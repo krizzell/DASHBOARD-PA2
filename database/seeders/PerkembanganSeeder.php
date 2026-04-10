@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Perkembangan;
+use App\Models\Siswa;
 
 class PerkembanganSeeder extends Seeder
 {
@@ -13,11 +14,15 @@ class PerkembanganSeeder extends Seeder
      */
     public function run(): void
     {
-        // Sample perkembangan data using correct siswa IDs from AkunSeeder
-        $perkembanganData = [
+        // Get first 2 siswa to create sample perkembangan
+        $siswaList = Siswa::limit(2)->get();
+
+        if ($siswaList->isEmpty()) {
+            return;
+        }
+
+        $templates = [
             [
-                'id_guru' => 1,
-                'nomor_induk_siswa' => 1001,  // Adi
                 'bulan' => 3,
                 'tahun' => 2026,
                 'kategori' => 'Kognitif',
@@ -25,8 +30,6 @@ class PerkembanganSeeder extends Seeder
                 'status_utama' => 'BSB'
             ],
             [
-                'id_guru' => 1,
-                'nomor_induk_siswa' => 1001,  // Adi
                 'bulan' => 3,
                 'tahun' => 2026,
                 'kategori' => 'Akademik',
@@ -35,8 +38,19 @@ class PerkembanganSeeder extends Seeder
             ],
         ];
 
-        foreach ($perkembanganData as $data) {
-            Perkembangan::create($data);
+        // Create perkembangan for each siswa
+        foreach ($siswaList as $siswa) {
+            foreach ($templates as $template) {
+                Perkembangan::create([
+                    'id_guru' => $siswa->kelas->id_guru ?? 1,
+                    'nomor_induk_siswa' => $siswa->nomor_induk_siswa,
+                    'bulan' => $template['bulan'],
+                    'tahun' => $template['tahun'],
+                    'kategori' => $template['kategori'],
+                    'deskripsi' => $template['deskripsi'],
+                    'status_utama' => $template['status_utama'],
+                ]);
+            }
         }
     }
 }

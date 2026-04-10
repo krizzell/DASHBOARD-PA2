@@ -14,7 +14,11 @@ class PerkembanganController extends Controller
     public function index()
     {
         // Semua guru (termasuk superadmin) bisa melihat SEMUA perkembangan anak
-        $perkembangan = Perkembangan::with(['guru', 'siswa.kelas'])->get();
+        $perkembangan = Perkembangan::with('guru')
+            ->with('siswa.kelas')
+            ->orderBy('id_perkembangan', 'desc')
+            ->get();
+        
         return view('perkembangan.index', compact('perkembangan'));
     }
 

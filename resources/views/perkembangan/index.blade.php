@@ -38,11 +38,23 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>
-                            <strong>{{ $item->siswa->nama_siswa ?? '-' }}</strong>
-                            <br>
-                            <small class="text-muted">{{ $item->guru->nama_guru ?? '-' }}</small>
+                            @if($item->siswa)
+                                <strong>{{ $item->siswa->nama_siswa }}</strong>
+                                <br>
+                                <small class="text-muted">{{ $item->guru->nama_guru ?? '-' }}</small>
+                            @else
+                                <span style="color: red;"><strong>ERROR: Siswa tidak ditemukan ({{ $item->nomor_induk_siswa }})</strong></span>
+                                <br>
+                                <small class="text-muted">{{ $item->guru->nama_guru ?? '-' }}</small>
+                            @endif
                         </td>
-                        <td>{{ $item->siswa->kelas->nama_kelas ?? '-' }}</td>
+                        <td>
+                            @if($item->siswa && $item->siswa->kelas)
+                                {{ $item->siswa->kelas->nama_kelas }}
+                            @else
+                                <span style="color: red;">{{ $item->siswa ? '-' : 'N/A' }}</span>
+                            @endif
+                        </td>
                         <td>
                             @php
                                 $bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
