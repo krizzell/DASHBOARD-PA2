@@ -47,16 +47,8 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
-                    <option value="">-- Pilih Status --</option>
-                    <option value="belum_bayar" {{ old('status') == 'belum_bayar' ? 'selected' : '' }}>Belum Bayar</option>
-                    <option value="lunas" {{ old('status') == 'lunas' ? 'selected' : '' }}>Lunas</option>
-                </select>
-                @error('status')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle"></i> <strong>Info:</strong> Status pembayaran akan berubah otomatis menjadi "Lunas" ketika orangtua melakukan pembayaran melalui aplikasi mobile. Anda tidak dapat mengubah status secara manual.
             </div>
 
             <div class="d-flex gap-2">

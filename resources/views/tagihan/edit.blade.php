@@ -49,15 +49,13 @@
             </div>
 
             <div class="mb-3">
-                <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
-                    <option value="">-- Pilih Status --</option>
-                    <option value="belum_bayar" {{ old('status', $tagihan->status) == 'belum bayar' ? 'selected' : '' }}>Belum Bayar</option>
-                    <option value="lunas" {{ old('status', $tagihan->status) == 'lunas' ? 'selected' : '' }}>Lunas</option>
-                </select>
-                @error('status')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <label class="form-label">Status Pembayaran</label>
+                <div class="form-control bg-light" style="cursor: default;">
+                    <strong>{{ ucfirst(str_replace('_', ' ', $tagihan->payment_status)) }}</strong>
+                </div>
+                <small class="text-muted d-block mt-2">
+                    <i class="bi bi-info-circle"></i> Status berubah otomatis ketika orangtua melakukan pembayaran melalui aplikasi mobile.
+                </small>
             </div>
 
             <div class="d-flex gap-2">

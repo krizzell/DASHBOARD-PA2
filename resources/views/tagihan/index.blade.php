@@ -8,9 +8,6 @@
         <h2><i class="bi bi-receipt"></i> Data Tagihan</h2>
     </div>
     <div class="col-md-6 text-end d-flex gap-2 justify-content-end flex-wrap">
-        <a href="{{ route('tagihan.bulkUpdateStatus') }}" class="btn btn-warning">
-            <i class="bi bi-arrow-repeat"></i> Update Status Massal
-        </a>
         <a href="{{ route('tagihan.bulkCreate') }}" class="btn btn-info">
             <i class="bi bi-files"></i> Buat Massal
         </a>
@@ -18,6 +15,12 @@
             <i class="bi bi-plus-circle"></i> Buat Tagihan
         </a>
     </div>
+</div>
+
+<!-- Info Box -->
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <i class="bi bi-info-circle"></i> <strong>Perhatian:</strong> Status pembayaran berubah otomatis menjadi "Lunas" ketika orangtua melakukan pembayaran melalui aplikasi mobile. Anda tidak dapat mengubah status secara manual.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
 <!-- Filter Section -->
@@ -149,13 +152,19 @@
                             @php
                                 $statusLabels = [
                                     'belum_bayar' => 'Belum Bayar',
-                                    'lunas' => 'Lunas'
+                                    'pending' => 'Pending',
+                                    'lunas' => 'Lunas',
+                                    'gagal' => 'Gagal'
                                 ];
-                                $badgeColor = $item->status == 'lunas' ? 'bg-success' : 'bg-warning';
+                                $paymentStatus = $item->payment_status ?? $item->status;
+                                $badgeColor = $paymentStatus == 'lunas' ? 'bg-success' : ($paymentStatus == 'pending' ? 'bg-info' : 'bg-warning');
                             @endphp
                             <span class="badge {{ $badgeColor }}">
-                                {{ $statusLabels[$item->status] ?? ucfirst(str_replace('_', ' ', $item->status)) }}
+                                {{ $statusLabels[$paymentStatus] ?? ucfirst(str_replace('_', ' ', $paymentStatus)) }}
                             </span>
+                            @if($item->payment_date)
+                                <br><small class="text-muted">{{ $item->payment_date->format('d/m/Y') }}</small>
+                            @endif
                         </td>
                         <td>
                             <a href="{{ route('tagihan.show', $item->id_tagihan) }}" class="btn btn-sm btn-info">

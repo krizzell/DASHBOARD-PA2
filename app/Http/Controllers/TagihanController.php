@@ -85,7 +85,6 @@ class TagihanController extends Controller
             'nomor_induk_siswa' => 'required|exists:siswa,nomor_induk_siswa',
             'jumlah_tagihan' => 'required|numeric|min:0',
             'periode' => 'required|string|max:20',
-            'status' => 'required|in:belum_bayar,lunas',
         ]);
 
         // Guru biasa hanya bisa buat tagihan untuk siswa kelasnya
@@ -97,6 +96,10 @@ class TagihanController extends Controller
             }
         }
 
+        // Set payment_status default ke 'belum_bayar'
+        $validated['payment_status'] = 'belum_bayar';
+        $validated['status'] = 'belum_bayar';
+        
         Tagihan::create($validated);
         return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil ditambahkan');
     }
@@ -153,9 +156,9 @@ class TagihanController extends Controller
             'nomor_induk_siswa' => 'required|exists:siswa,nomor_induk_siswa',
             'jumlah_tagihan' => 'required|numeric|min:0',
             'periode' => 'required|string|max:20',
-            'status' => 'required|in:belum_bayar,lunas',
         ]);
 
+        // Status TIDAK bisa diedit manual - hanya berubah via payment gateway
         $tagihan->update($validated);
         return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil diperbarui');
     }

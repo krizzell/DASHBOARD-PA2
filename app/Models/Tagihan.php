@@ -10,7 +10,20 @@ class Tagihan extends Model
 {
     protected $table = 'tagihan';
     protected $primaryKey = 'id_tagihan';
-    protected $fillable = ['nomor_induk_siswa', 'jumlah_tagihan', 'periode', 'status'];
+    protected $fillable = [
+        'nomor_induk_siswa', 
+        'jumlah_tagihan', 
+        'periode', 
+        'status',
+        'transaction_id',
+        'payment_method',
+        'payment_date',
+        'payment_status'
+    ];
+
+    protected $casts = [
+        'payment_date' => 'datetime',
+    ];
 
     public function siswa(): BelongsTo
     {
